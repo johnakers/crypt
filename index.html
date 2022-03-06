@@ -1,0 +1,93 @@
+<html>
+  <head>
+    <title>John Akers | Crypt</title>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
+    <style>
+
+      html,
+      body {
+        /* background-color: #333; */
+        margin: 0;
+        padding: 0;
+      }
+
+    </style>
+  </head>
+  <body>
+    <script src="./js/Room.js"></script>
+    <script src="./js/Floor.js"></script>
+    <script>
+
+      // main
+      const floor = new Floor({ size: 3 });
+      floor.build();
+      console.log(floor);
+
+      // p5js
+      function setup() {
+        createCanvas(window.innerWidth, window.innerHeight);
+      }
+
+      function draw() {
+        background(50);
+
+        fill(50);
+        stroke(200);
+        drawFloor();
+      }
+
+      // move this code to Floor?
+
+      function drawFloor() {
+        let rooms = floor.floor;
+        let discovered = {};
+        let start = 20;
+        let drawIncrement = 40;
+        let width = 20
+
+        // draw rooms
+        for (let i = 0; i < rooms.length; i++) {
+          let row = rooms[i];
+          for (let j = 0; j < row.length; j++) {
+            let currentRoom = rooms[i][j];
+
+            // don't draw rooms with no edges/connections/hallways
+            if (!currentRoom.references.length) {
+              continue;
+            }
+
+            let x = (drawIncrement * (i % floor.size)) + start;
+            let y =  (drawIncrement * (j % floor.size)) + start;
+            if (currentRoom.possibleEnd) { fill(100, 100, 250) }
+            rect(x, y, width);
+            fill(50)
+
+            // for drawing purposes only
+            currentRoom.x = x;
+            currentRoom.y = y
+          }
+        }
+
+        // draw edges/connections/hallways
+        let drawnEdges = [];
+        for (let i = 0; i < rooms.length; i++) {
+          let row = rooms[i];
+          for (let j = 0; j < row.length; j++) {
+            let currentRoom = rooms[i][j];
+
+            // don't draw rooms with no edges/connections/hallways
+            if (!currentRoom.references.length) {
+              continue;
+            }
+
+            for (let k = 0; k < currentRoom.references.length; k++) {
+              let currentReference = currentRoom.references[k];
+              line(currentRoom.x + 10, currentRoom.y + 10, currentReference.x + 10, currentReference.y + 10)
+            }
+          }
+        }
+      }
+
+    </script>
+  </body>
+</html>
