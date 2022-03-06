@@ -42,7 +42,7 @@ class Floor {
 
       var row = [];
       for (let j = 0; j < this.size; j++) {
-        row.push(new Room({ location: [i, j], size: 7 }));
+        row.push(new Room({ location: [i, j], size: parseInt(roomSize.value) }));
       }
 
       this.floor.push(row);

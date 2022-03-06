@@ -6,36 +6,42 @@
 
       html,
       body {
-        /* background-color: #333; */
         margin: 0;
         padding: 0;
       }
 
-      #rooms{
-        height: 100vh;
+      #download{
+        font-family: monospace;
+        color: red;
+        cursor: pointer;
+        display: none;
         position: fixed;
         right: 10;
         top: 10;
       }
 
+      #download:hover {
+        border-bottom: 2px solid red;
+      }
+
     </style>
   </head>
   <body>
-    <div id="rooms">
+    <div id="download">download JSON file</div>
+    <div id="form">
+      Grid size (n x n). Default is 3 x 3.<br />
+      <input type="number" id="floor_size" min="3" /><br />
+      Room size (n x n). Must be odd, and greater than or equal to 3. Default is 7.<br />
+      <input type="number" id="room_size" min="3" /><br />
+      <button>Submit</button>
     </div>
 
     <script src="./js/Room.js"></script>
     <script src="./js/Floor.js"></script>
+    <script src="./js/input.js"></script>
     <script>
 
-      // main
-      const floor = new Floor({
-        size: 3,
-        doorCreationChance: 0.5
-      });
-
-      floor.build();
-      console.log(floor)
+      let floor = null;
 
       // --- p5js ---
       function setup() {
@@ -45,8 +51,33 @@
       function draw() {
         background(50);
 
-        floor.draw();
+        if (floor) {
+          floor.draw();
+        }
       }
+
+      function download(filename, text) {
+        var element = document.createElement('a');
+        element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+        element.setAttribute('download', filename);
+        element.style.display = 'none';
+        document.body.appendChild(element);
+        element.click();
+        document.body.removeChild(element);
+      }
+
+      // download
+      document.querySelector('#download').addEventListener('click', function() {
+        let json = {};
+        for (let i = 0; i < floor.floor.length; i++) {
+          json[i] = {}
+          for (let j = 0; j < floor.floor[i].length; j++) {
+            json[i][j] = floor.floor[i][j].room;
+          }
+        }
+
+        download('crypt.json', JSON.stringify(json));
+      })
 
     </script>
   </body>
