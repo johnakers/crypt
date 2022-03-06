@@ -2,37 +2,55 @@ class Floor {
   constructor(config) {
     this.id = `floor_${parseInt(Math.random() * 10000)}`; // just a random ID
     this.size = config.size;
-    this.doorCreationChance = 0.5; // 50% chance to create a door, in a given direction
+    this.doorCreationChance = config.doorCreationChance;
+
     this.floor = [];
   }
 
-  get connectedRooms() {
-    let rooms = this.floor.flat();
-
-    let result = [];
-    for (let i = 0; i < rooms.length; i++) {
-      let room = rooms[i]
-      if (room.references.length) {
-        result.push(room);
-      }
-    }
-
-    return result;
+  build() {
+    this._buildGrid();
+    this._buildReferences();
+    this._buildRooms();
   }
 
-  build() {
-    // build grid (make nodes)
+  draw() {
+    // stroke(200);
+    // fill(50);
+    const start = 20;
+    const drawIncrement = 50;
+
+    // draw grid
+    for (let i = 0; i < this.floor.length; i++) {
+      for (let j = 0; j < this.floor[i].length; j++) {
+        let currentRoom = this.floor[i][j];
+
+        // don't draw rooms with no edges/connections/hallways
+        if (!currentRoom.references.length) {
+          continue;
+        }
+
+        currentRoom.x = (drawIncrement * (j % this.size)) + start;
+        currentRoom.y = (drawIncrement * (i % this.size)) + start;
+        currentRoom.draw();
+      }
+    }
+  }
+
+  // void
+  _buildGrid() {
     for (let i = 0; i < this.size; i++) {
 
       var row = [];
       for (let j = 0; j < this.size; j++) {
-        row.push(new Room({ location: [i, j] }));
+        row.push(new Room({ location: [i, j], size: 7 }));
       }
 
       this.floor.push(row);
     }
+  }
 
-    // assign doors (connect edges)
+  // void
+  _buildReferences() {
     for (let i = 0; i < this.size; i++) {
       for (let j = 0; j < this.size; j++) {
         let currentRoom = this.floor[i][j];
@@ -43,7 +61,7 @@ class Floor {
           availableDoors.push(['south', 'east']);
         }
         // top right
-        else if (i === 0 && j === this.size -1) {
+        else if (i === 0 && j === this.size - 1) {
           availableDoors.push(['south', 'west']);
         }
         // bottom left
@@ -86,8 +104,6 @@ class Floor {
         }
       }
     }
-
-    return this.floor;
   }
 
   _otherRoomFromDoor(row, col, direction) {
@@ -99,6 +115,14 @@ class Floor {
       return this.floor[row - 1][col];
     } else if (direction === 'south') {
       return this.floor[row + 1][col];
+    }
+  }
+
+  _buildRooms() {
+    for (let i = 0; i < this.floor.length; i++) {
+      for (let j = 0; j < this.floor[i].length; j++) {
+        this.floor[i][j].build();
+      }
     }
   }
 }

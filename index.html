@@ -28,14 +28,16 @@
     <script src="./js/Floor.js"></script>
     <script>
 
-      let hoveringOn = null
-
       // main
-      const floor = new Floor({ size: 3 });
-      floor.build();
-      console.log(floor);
+      const floor = new Floor({
+        size: 3,
+        doorCreationChance: 0.5
+      });
 
-      // p5js
+      floor.build();
+      console.log(floor)
+
+      // --- p5js ---
       function setup() {
         createCanvas(window.innerWidth, window.innerHeight);
       }
@@ -43,99 +45,7 @@
       function draw() {
         background(50);
 
-        // fill(50);
-        stroke(200);
-        onRoomHover()
-        drawFloor();
-        // createButtons()
-      }
-
-      function mousePressed() {
-        if (hoveringOn) {
-          hoveringOn.draw()
-        }
-      }
-
-      function onRoomHover() {
-        for (let i = 0; i < floor.floor.length; i++) {
-          let row = floor.floor[i];
-          for (let j = 0; j < row.length; j++) {
-            let room = floor.floor[i][j]
-            if (
-              mouseX > room.x - 15 &&
-              mouseX < room.x + 15 &&
-              mouseY > room.y - 15 &&
-              mouseY < room.y + 15
-            ) {
-              hoveringOn = room;
-            } else {
-              hoveringOn = null
-            }
-          }
-        }
-      }
-
-      // function createButtons() {
-      //   for (let i = 0; i < floor.floor.length; i++) {
-      //     let row = floor.floor[i];
-      //     for (let j = 0; j < row.length; j++) {
-      //       let room = floor.floor[j][]
-      //       let button = createButton(`${}`)
-      //     }
-      //   }
-      // }
-
-      // move this code to Floor?
-
-      function drawFloor() {
-        let rooms = floor.floor;
-        let start = 20;
-        let drawIncrement = 60;
-        let width = 20
-
-        // draw rooms
-        for (let i = 0; i < rooms.length; i++) {
-          let row = rooms[i];
-          for (let j = 0; j < row.length; j++) {
-            let currentRoom = rooms[i][j];
-
-            // don't draw rooms with no edges/connections/hallways
-            if (!currentRoom.references.length) {
-              continue;
-            }
-
-            let x = (drawIncrement * (j % floor.size)) + start;
-            let y =  (drawIncrement * (i % floor.size)) + start;
-            if (currentRoom.possibleEnd) { fill(100, 100, 250) }
-            text(`${currentRoom.location[0]}, ${currentRoom.location[1]}`, x, y - 5)
-            rect(x, y, width);
-            // debug text
-            fill(currentRoom.fill);
-
-            // for drawing purposes only
-            currentRoom.x = x;
-            currentRoom.y = y
-          }
-        }
-
-        // draw edges/connections/hallways
-        let drawnEdges = [];
-        for (let i = 0; i < rooms.length; i++) {
-          let row = rooms[i];
-          for (let j = 0; j < row.length; j++) {
-            let currentRoom = rooms[i][j];
-
-            // don't draw rooms with no edges/connections/hallways
-            if (!currentRoom.references.length) {
-              continue;
-            }
-
-            for (let k = 0; k < currentRoom.references.length; k++) {
-              let currentReference = currentRoom.references[k];
-              line(currentRoom.x + 10, currentRoom.y + 10, currentReference.x + 10, currentReference.y + 10)
-            }
-          }
-        }
+        floor.draw();
       }
 
     </script>
