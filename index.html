@@ -11,12 +11,24 @@
         padding: 0;
       }
 
+      #rooms{
+        height: 100vh;
+        position: fixed;
+        right: 10;
+        top: 10;
+      }
+
     </style>
   </head>
   <body>
+    <div id="rooms">
+    </div>
+
     <script src="./js/Room.js"></script>
     <script src="./js/Floor.js"></script>
     <script>
+
+      let hoveringOn = null
 
       // main
       const floor = new Floor({ size: 3 });
@@ -31,18 +43,54 @@
       function draw() {
         background(50);
 
-        fill(50);
+        // fill(50);
         stroke(200);
+        onRoomHover()
         drawFloor();
+        // createButtons()
       }
+
+      function mousePressed() {
+        if (hoveringOn) {
+          hoveringOn.draw()
+        }
+      }
+
+      function onRoomHover() {
+        for (let i = 0; i < floor.floor.length; i++) {
+          let row = floor.floor[i];
+          for (let j = 0; j < row.length; j++) {
+            let room = floor.floor[i][j]
+            if (
+              mouseX > room.x - 15 &&
+              mouseX < room.x + 15 &&
+              mouseY > room.y - 15 &&
+              mouseY < room.y + 15
+            ) {
+              hoveringOn = room;
+            } else {
+              hoveringOn = null
+            }
+          }
+        }
+      }
+
+      // function createButtons() {
+      //   for (let i = 0; i < floor.floor.length; i++) {
+      //     let row = floor.floor[i];
+      //     for (let j = 0; j < row.length; j++) {
+      //       let room = floor.floor[j][]
+      //       let button = createButton(`${}`)
+      //     }
+      //   }
+      // }
 
       // move this code to Floor?
 
       function drawFloor() {
         let rooms = floor.floor;
-        let discovered = {};
         let start = 20;
-        let drawIncrement = 40;
+        let drawIncrement = 60;
         let width = 20
 
         // draw rooms
@@ -56,11 +104,13 @@
               continue;
             }
 
-            let x = (drawIncrement * (i % floor.size)) + start;
-            let y =  (drawIncrement * (j % floor.size)) + start;
+            let x = (drawIncrement * (j % floor.size)) + start;
+            let y =  (drawIncrement * (i % floor.size)) + start;
             if (currentRoom.possibleEnd) { fill(100, 100, 250) }
+            text(`${currentRoom.location[0]}, ${currentRoom.location[1]}`, x, y - 5)
             rect(x, y, width);
-            fill(50)
+            // debug text
+            fill(currentRoom.fill);
 
             // for drawing purposes only
             currentRoom.x = x;

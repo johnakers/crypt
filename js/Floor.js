@@ -20,14 +20,6 @@ class Floor {
     return result;
   }
 
-  // longestPath() {
-  //   let currentRoom = this.floor[0][0];
-  //   let paths = {};
-  //   paths[currentRoom.id] = this._getDistances(currentRoom);
-  //   debugger
-
-  // }
-
   build() {
     // build grid (make nodes)
     for (let i = 0; i < this.size; i++) {
@@ -109,25 +101,4 @@ class Floor {
       return this.floor[row + 1][col];
     }
   }
-
-  // _getDistances(room) {
-  //   let unvisited = this.connectedRooms;
-  //   let visited = [];
-
-  //   let shortestDistance = {};
-  //   for (let vertex of unvisited) {
-  //     if (vertex.id === room.id) {
-  //       shortestDistance[vertex.id] = 0;
-  //     } else {
-  //       shortestDistance[vertex.id] = Infinity;
-  //     }
-  //   }
-
-  //   for (let i = 0; i < room.references.length; i++) {
-  //     let ref = room.references[i];
-  //     shortestDistance[ref.id] = 1;
-  //   }
-
-  //   return shortestDistance;
-  // }
 }
