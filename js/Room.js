@@ -160,7 +160,7 @@ class Room {
         output += `${row.join('')}\n`
       }
 
-      text(output, window.innerWidth / 2, window.innerHeight / 2);
+      text(output, window.innerWidth / 4, window.innerHeight / 2);
     } else {
       this.fill = 50;
     }
