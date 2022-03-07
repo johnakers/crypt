@@ -1,18 +1,28 @@
-const downloadDiv = document.querySelector('#download');
-const form = document.querySelector('#form');
-const floorSize = document.querySelector('#floor_size');
-const roomSize = document.querySelector('#room_size')
-const submitButton = document.querySelector('button');
+const gridLabel = document.querySelector('#grid_label');
+const gridSlider = document.querySelector('#grid_slider');
 
-submitButton.addEventListener('click', function (e) {
+const roomSizeLabel = document.querySelector('#room_label');
+const roomSize = document.querySelector('#room_size');
+
+const doorPercentLabel = document.querySelector('#door_label');
+const doorPercent = document.querySelector('#door_chance');
+
+function update(value) {
+  gridLabel.innerText = `grid: ${gridSlider.value} x ${gridSlider.value}`;
+  roomSizeLabel.innerText = `room: ${roomSize.value} x ${roomSize.value}`;
+  doorPercentLabel.innerText = `door %: ${parseInt(doorPercent.value * 100)}`;
+
+  rebuild();
+}
+
+function rebuild() {
+  let gridSize = gridSlider.value;
+
   floor = new Floor({
-    size: parseInt(floorSize.value),
-    doorCreationChance: 0.5
+    size: gridSize,
+    doorCreationChance: parseFloat(doorPercent.value)
   });
 
   floor.build();
-  console.log(floor)
-
-  downloadDiv.style.display = 'block';
-  form.style.display = 'none';
-});
+  console.log(floor);
+}

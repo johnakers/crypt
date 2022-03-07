@@ -3,38 +3,64 @@
     <title>John Akers | Crypt</title>
     <script src="https://cdn.jsdelivr.net/npm/p5@1.4.0/lib/p5.js"></script>
     <style>
+      @font-face {
+        font-family: 'Reactor7';
+        src: url('./fonts/Reactor7.ttf');
+      }
 
       html,
       body {
+        font-family: 'Reactor7';
         margin: 0;
         padding: 0;
       }
 
-      #download{
-        font-family: monospace;
-        color: red;
-        cursor: pointer;
-        display: none;
+      #form {
+        background-color: #333;
+        border-left: 1px solid #111;
+        font-size: 14px;
+        color: #EEE;
+        height: 100vh;
+        width: 200px;
         position: fixed;
-        right: 10;
-        top: 10;
+        right: 0;
+        top: 0;
       }
 
-      #download:hover {
-        border-bottom: 2px solid red;
+      #form-inner {
+        margin: auto;
+        padding-top: 10px;
+        width: 80%;
+      }
+
+      .label,
+      button {
+        font-family: 'Reactor7';
+        font-size: 14px;
+        margin-top: 5px;
+      }
+
+      input {
+        margin-bottom: 5px;
       }
 
     </style>
   </head>
   <body>
-    <div id="download">Click here to download JSON file</div>
     <div id="form">
-      Grid size (n x n). Default is 3 x 3.<br />
-      <input type="number" id="floor_size" min="3" /><br />
-      Room size (n x n). Must be odd, and greater than or equal to 3. Default is 7.<br />
-      <input type="number" id="room_size" min="3" /><br />
-      Hover over each room to view it.<br />
-      <button>Submit</button>
+      <div id="form-inner">
+        <div class="label" id="grid_label">grid: 3 x 3</div>
+        <input id="grid_slider" type="range" min="3" max="11" value="5" onchange="update(this.value)">
+
+        <div class="label" id="room_label">room: 7 x 7</div>
+        <input id="room_size" type="range" min="5" max="13" value="7" step="2" onchange="update(this.value)">
+
+        <div class="label" id="door_label">door %: 50</div>
+        <input id="door_chance" type="range" min="0.1" max="1" value="0.5" step="0.1" onchange="update(this.value)">
+
+        <button onclick="rebuild()">Rebuild</button>
+        <button id="download">Download JSON</button>
+      </div>
     </div>
 
     <script src="./js/Room.js"></script>
@@ -79,6 +105,8 @@
 
         download('crypt.json', JSON.stringify(json));
       })
+
+      rebuild();
 
     </script>
   </body>
